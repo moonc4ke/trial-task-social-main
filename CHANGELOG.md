@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.0.0] - 2025-12-15
 
 ### Added
 - **Input Validation**: Comprehensive validation on both frontend and backend
