@@ -114,6 +114,60 @@ I chose the TypeScript backend because:
 - **Progressive disclosure:** Advanced features (web research) in collapsible/toggle sections
 - **Visual hierarchy:** Platform-colored headers help identify posts quickly
 
+## Testing
+
+### Test Framework: Vitest
+
+I chose Vitest because:
+- Fast execution with native ESM support
+- Compatible with both Node.js (backend) and happy-dom (frontend)
+- Easy mocking capabilities
+- Good TypeScript support out of the box
+
+### Backend Tests (47 tests)
+
+Located in `backend-ts/tests/`:
+
+**validation.test.ts (30 tests)**
+- Tests for `validateProduct()` function
+- Covers valid products, missing fields, empty values, length limits, price validation, type validation
+
+**api.test.ts (17 tests)**
+- Integration tests using supertest
+- Tests health endpoint, validation errors, successful generation, web research integration, error handling
+
+Run backend tests:
+```bash
+cd backend-ts
+npm test
+```
+
+### Frontend Tests (39 tests)
+
+Located in `frontend/tests/`:
+
+**api.test.ts (11 tests)**
+- Tests for API client functions
+- Covers request formatting, error handling, ApiException class
+
+**validation.test.ts (28 tests)**
+- Tests for validation utility functions
+- Covers `validateProduct()`, `isFormValid()`, `formatPrice()`
+
+Run frontend tests:
+```bash
+cd frontend
+npm test
+```
+
+### Test Coverage
+
+Both test suites cover:
+- Happy path scenarios
+- Edge cases (empty strings, whitespace, boundary values)
+- Error conditions (API failures, validation errors, rate limits)
+- Type safety (invalid types, null/undefined)
+
 ## What I'd Do With More Time
 
 1. **Image Upload Support:** Allow users to upload product images and reference them in posts
@@ -125,7 +179,7 @@ I chose the TypeScript backend because:
 7. **Multi-language Support:** Generate posts in different languages
 8. **Caching:** Cache web research results to reduce API calls
 9. **Rate Limiting:** Add request rate limiting for production use
-10. **Tests:** Unit and integration tests for both frontend and backend
+10. **E2E Tests:** Add Playwright or Cypress for end-to-end testing
 
 ## Tradeoffs Made
 
@@ -146,26 +200,40 @@ I chose the TypeScript backend because:
 - **Next.js 15:** Frontend framework
 - **Express:** Backend framework
 - **Tailwind CSS:** Styling
+- **Vitest:** Testing framework for both frontend and backend
+- **Supertest:** HTTP assertion library for API integration tests
+- **happy-dom:** Lightweight DOM implementation for frontend tests
 
 ## File Structure
 
 ```
 backend-ts/
   src/
-    server.ts      - Express app, routes, validation
+    server.ts      - Express app, routes, imports validation
+    validation.ts  - Product, tone, platform validation functions
     generate.ts    - Post generation logic, prompts
     openai.ts      - OpenAI client, API calls
     webResearch.ts - Web search integration
     types.ts       - Shared TypeScript types
     config.ts      - Platform configurations
+  tests/
+    validation.test.ts - Unit tests for validation
+    api.test.ts        - Integration tests for API endpoints
+  vitest.config.ts     - Vitest configuration
 
 frontend/
   src/
     api.ts         - API client with error handling
+    validation.ts  - Frontend validation utilities
     app/
       page.tsx     - Main application component
       layout.tsx   - App layout
       globals.css  - Global styles
+  tests/
+    api.test.ts        - API client tests
+    validation.test.ts - Validation utility tests
+    setup.ts           - Test setup file
+  vitest.config.ts     - Vitest configuration
 ```
 
 ## Running the Application
@@ -185,3 +253,20 @@ npm run dev
 ```
 
 Visit http://localhost:3000 to use the application.
+
+## Running Tests
+
+```bash
+# Backend tests (47 tests)
+cd backend-ts
+npm test
+
+# Frontend tests (39 tests)
+cd frontend
+npm test
+
+# Watch mode for development
+npm run test:watch
+```
+
+Total: **86 tests** across both frontend and backend.

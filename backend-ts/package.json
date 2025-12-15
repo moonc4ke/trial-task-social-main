@@ -4,19 +4,25 @@
   "description": "Backend service for generating social media posts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "tsx src/server.ts"
+    "start": "tsx src/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "express": "^4.21.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "express": "^4.21.0",
     "openai": "^5.17.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.5.0",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4",
+    "tsx": "^4.19.0",
     "typescript": "^5.6.3",
-    "tsx": "^4.19.0"
+    "vitest": "^4.0.15"
   }
 }

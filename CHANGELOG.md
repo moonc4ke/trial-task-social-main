@@ -24,6 +24,9 @@ All notable changes to this project will be documented in this file.
   - Gathers market insights
   - Results displayed in dedicated section
   - Toggle to enable/disable research
+- **Test Suite**: Comprehensive unit and integration tests using Vitest
+  - Backend: 47 tests (validation, API endpoints, error handling)
+  - Frontend: 39 tests (API client, validation utilities)
 
 ### Changed
 - Redesigned UI with two-column layout (input/output)
@@ -75,3 +78,36 @@ All notable changes to this project will be documented in this file.
 - Added frontend toggle for web research
 - Created results display section
 - Added beta badge to indicate experimental feature
+
+### Implementation Phase 4: Testing
+- Set up Vitest testing framework for both backend and frontend
+- Created validation.ts module for testable validation logic
+- Refactored server.ts to export app for integration testing
+
+**Backend Tests (47 total):**
+- Unit tests for validateProduct (30 tests)
+  - Valid product acceptance
+  - Missing field detection
+  - Empty/whitespace value detection
+  - Length limit enforcement
+  - Price validation (negative, unrealistic, NaN)
+  - Type validation
+- Unit tests for validateTone (7 tests)
+- Unit tests for validatePlatforms (6 tests)
+- Integration tests for API endpoints (17 tests)
+  - Health check endpoint
+  - Generate endpoint validation
+  - Successful generation with mocked OpenAI
+  - Web research integration
+  - Error handling (API errors, rate limits)
+
+**Frontend Tests (39 total):**
+- API client tests (11 tests)
+  - Request formatting
+  - Error handling
+  - ApiException creation
+  - Health check functionality
+- Validation utility tests (28 tests)
+  - validateProduct function
+  - isFormValid function
+  - formatPrice function
