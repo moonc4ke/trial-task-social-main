@@ -1,21 +1,51 @@
-interface Product {
+export interface Product {
   name: string;
   description: string;
   price: number;
   category?: string;
 }
 
-interface GeneratePostsResponse {
-  posts: Array<{
-    platform: "twitter" | "instagram" | "linkedin";
-    content: string;
-  }>;
+export type Platform = "twitter" | "instagram" | "linkedin";
+export type Tone = "professional" | "casual" | "humorous" | "inspirational" | "urgent";
+
+export interface SocialMediaPost {
+  platform: Platform;
+  content: string;
+}
+
+export interface GeneratePostsRequest {
+  product: Product;
+  tone?: Tone;
+  platforms?: Platform[];
+}
+
+export interface GeneratePostsResponse {
+  posts: SocialMediaPost[];
   generated_at: string;
   count: number;
+  tone: Tone;
+  platforms: Platform[];
+}
+
+export interface ApiError {
+  error: string;
+  message?: string;
+  details?: string[];
+}
+
+export class ApiException extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public details?: string[]
+  ) {
+    super(message);
+    this.name = "ApiException";
+  }
 }
 
 export async function generatePosts(
-  product: Product
+  request: GeneratePostsRequest
 ): Promise<GeneratePostsResponse> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/generate`,
@@ -24,9 +54,31 @@ export async function generatePosts(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ product }),
+      body: JSON.stringify(request),
     }
   );
 
-  return response.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    const errorData = data as ApiError;
+    throw new ApiException(
+      errorData.message || errorData.error || "An error occurred",
+      response.status,
+      errorData.details
+    );
+  }
+
+  return data as GeneratePostsResponse;
+}
+
+export async function checkHealth(): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/health`
+    );
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
