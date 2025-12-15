@@ -43,33 +43,16 @@ Here are some ideas you can choose from:
 
 Responses API reference: https://cookbook.openai.com/examples/responses_api/responses_example
 
-## Backend Language Choice
-
-Choose the backend that matches your expertise:
-
-### TypeScript Backend (backend-ts)
+## Backend Setup
 
 ```bash
 cd backend-ts
 npm install
-cp .env.example .env # add missing values
+cp .env.example .env  # Add your OPENAI_API_KEY
 npm run dev
 ```
 
-### Python Backend (backend-py)
-
-```bash
-cd backend-py
-make sync
-cp .env.example .env # add missing values
-make dev
-```
-
-Both backends provide identical functionality and API endpoints.
-
 ## Frontend Setup
-
-The frontend works with either backend:
 
 ```bash
 cd frontend

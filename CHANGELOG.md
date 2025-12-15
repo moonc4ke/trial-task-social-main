@@ -36,6 +36,9 @@ All notable changes to this project will be documented in this file.
 - Enhanced API response structure with tone and platform metadata
 - Better form UX with inline validation and character counts
 
+### Removed
+- **Python backend** (`backend-py/`): Removed unused Python backend to simplify codebase. All improvements were made to the TypeScript backend only.
+
 ### Fixed
 - Price input no longer shows 0 by default
 - API errors are now properly caught and displayed
