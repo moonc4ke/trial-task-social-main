@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generatePosts, checkHealth, ApiException } from '../src/api';
+import { generatePosts, checkHealth, ApiException } from '../../src/api';
 
 // Mock fetch globally
 const mockFetch = vi.fn();

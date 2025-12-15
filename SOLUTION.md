@@ -128,36 +128,49 @@ I chose Vitest because:
 
 Located in `backend-ts/tests/`:
 
-**validation.test.ts (30 tests)**
-- Tests for `validateProduct()` function
-- Covers valid products, missing fields, empty values, length limits, price validation, type validation
+**Unit Tests** (`tests/unit/`)
+- **validation.test.ts** (30 tests) - Tests for validation functions
+  - `validateProduct()`: valid products, missing fields, empty values, length limits, price validation, type validation
+  - `validateTone()`: valid and invalid tone values
+  - `validatePlatforms()`: platform array validation
 
-**api.test.ts (17 tests)**
-- Integration tests using supertest
-- Tests health endpoint, validation errors, successful generation, web research integration, error handling
+**Integration Tests** (`tests/integration/`)
+- **api.test.ts** (17 tests) - API endpoint tests using supertest
+  - Health check endpoint
+  - Generate endpoint validation errors
+  - Successful generation with mocked OpenAI
+  - Web research integration
+  - Error handling (API errors, rate limits)
 
 Run backend tests:
 ```bash
 cd backend-ts
-npm test
+npm test              # Run all tests
+npm run test:unit     # Run only unit tests
+npm run test:integration  # Run only integration tests
 ```
 
 ### Frontend Tests (39 tests)
 
 Located in `frontend/tests/`:
 
-**api.test.ts (11 tests)**
-- Tests for API client functions
-- Covers request formatting, error handling, ApiException class
+**Unit Tests** (`tests/unit/`)
+- **api.test.ts** (11 tests) - API client tests
+  - Request formatting and parameters
+  - Error handling and ApiException
+  - Health check functionality
 
-**validation.test.ts (28 tests)**
-- Tests for validation utility functions
-- Covers `validateProduct()`, `isFormValid()`, `formatPrice()`
+- **validation.test.ts** (28 tests) - Validation utility tests
+  - `validateProduct()`: name, description, price validation
+  - `isFormValid()`: form state validation
+  - `formatPrice()`: price string parsing
 
 Run frontend tests:
 ```bash
 cd frontend
-npm test
+npm test              # Run all tests
+npm run test:unit     # Run only unit tests
+npm run test:integration  # Run only integration tests (when added)
 ```
 
 ### Test Coverage
@@ -217,9 +230,11 @@ backend-ts/
     types.ts       - Shared TypeScript types
     config.ts      - Platform configurations
   tests/
-    validation.test.ts - Unit tests for validation
-    api.test.ts        - Integration tests for API endpoints
-  vitest.config.ts     - Vitest configuration
+    unit/
+      validation.test.ts - Unit tests for validation functions
+    integration/
+      api.test.ts        - Integration tests for API endpoints
+  vitest.config.ts       - Vitest configuration
 
 frontend/
   src/
@@ -230,10 +245,13 @@ frontend/
       layout.tsx   - App layout
       globals.css  - Global styles
   tests/
-    api.test.ts        - API client tests
-    validation.test.ts - Validation utility tests
-    setup.ts           - Test setup file
-  vitest.config.ts     - Vitest configuration
+    unit/
+      api.test.ts        - API client unit tests
+      validation.test.ts - Validation utility tests
+    integration/
+      (future integration tests)
+    setup.ts             - Test setup file
+  vitest.config.ts       - Vitest configuration
 ```
 
 ## Running the Application

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { validateProduct, isFormValid, formatPrice, ValidationErrors } from '../src/validation';
-import { Product } from '../src/api';
+import { validateProduct, isFormValid, formatPrice, ValidationErrors } from '../../src/validation';
+import { Product } from '../../src/api';
 
 describe('validateProduct', () => {
   const validProduct: Product = {

@@ -25,8 +25,10 @@ All notable changes to this project will be documented in this file.
   - Results displayed in dedicated section
   - Toggle to enable/disable research
 - **Test Suite**: Comprehensive unit and integration tests using Vitest
-  - Backend: 47 tests (validation, API endpoints, error handling)
-  - Frontend: 39 tests (API client, validation utilities)
+  - Organized into `tests/unit/` and `tests/integration/` folders
+  - Backend: 47 tests (30 unit + 17 integration)
+  - Frontend: 39 tests (all unit tests)
+  - Separate npm scripts: `test:unit` and `test:integration`
 
 ### Changed
 - Redesigned UI with two-column layout (input/output)
@@ -83,31 +85,37 @@ All notable changes to this project will be documented in this file.
 - Set up Vitest testing framework for both backend and frontend
 - Created validation.ts module for testable validation logic
 - Refactored server.ts to export app for integration testing
+- Organized tests into `unit/` and `integration/` folders for better structure
+- Added separate npm scripts for running unit vs integration tests
 
 **Backend Tests (47 total):**
-- Unit tests for validateProduct (30 tests)
-  - Valid product acceptance
-  - Missing field detection
-  - Empty/whitespace value detection
-  - Length limit enforcement
-  - Price validation (negative, unrealistic, NaN)
-  - Type validation
-- Unit tests for validateTone (7 tests)
-- Unit tests for validatePlatforms (6 tests)
-- Integration tests for API endpoints (17 tests)
-  - Health check endpoint
-  - Generate endpoint validation
-  - Successful generation with mocked OpenAI
-  - Web research integration
-  - Error handling (API errors, rate limits)
+
+`tests/unit/validation.test.ts` (30 tests):
+- Valid product acceptance
+- Missing field detection
+- Empty/whitespace value detection
+- Length limit enforcement
+- Price validation (negative, unrealistic, NaN)
+- Type validation
+- Tone validation (7 tests)
+- Platform validation (6 tests)
+
+`tests/integration/api.test.ts` (17 tests):
+- Health check endpoint
+- Generate endpoint validation
+- Successful generation with mocked OpenAI
+- Web research integration
+- Error handling (API errors, rate limits)
 
 **Frontend Tests (39 total):**
-- API client tests (11 tests)
-  - Request formatting
-  - Error handling
-  - ApiException creation
-  - Health check functionality
-- Validation utility tests (28 tests)
-  - validateProduct function
-  - isFormValid function
-  - formatPrice function
+
+`tests/unit/api.test.ts` (11 tests):
+- Request formatting
+- Error handling
+- ApiException creation
+- Health check functionality
+
+`tests/unit/validation.test.ts` (28 tests):
+- validateProduct function
+- isFormValid function
+- formatPrice function

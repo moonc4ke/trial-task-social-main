@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
-import { app } from '../src/server';
+import { app } from '../../src/server';
 
 // Mock the generate and webResearch modules
-vi.mock('../src/generate', () => ({
+vi.mock('../../src/generate', () => ({
   generateSocialMediaPosts: vi.fn(),
 }));
 
-vi.mock('../src/webResearch', () => ({
+vi.mock('../../src/webResearch', () => ({
   performWebResearch: vi.fn(),
 }));
 
-import { generateSocialMediaPosts } from '../src/generate';
-import { performWebResearch } from '../src/webResearch';
+import { generateSocialMediaPosts } from '../../src/generate';
+import { performWebResearch } from '../../src/webResearch';
 
 const mockGeneratePosts = generateSocialMediaPosts as ReturnType<typeof vi.fn>;
 const mockWebResearch = performWebResearch as ReturnType<typeof vi.fn>;
