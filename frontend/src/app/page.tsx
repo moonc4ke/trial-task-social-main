@@ -8,6 +8,7 @@ import {
   SocialMediaPost,
   Platform,
   Tone,
+  WebResearchResult,
 } from "../api";
 
 const PLATFORM_CONFIG = {
@@ -88,6 +89,8 @@ export default function Home() {
     "linkedin",
   ]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [enableWebResearch, setEnableWebResearch] = useState(false);
+  const [webResearch, setWebResearch] = useState<WebResearchResult | null>(null);
 
   const handlePlatformToggle = (platform: Platform) => {
     setSelectedPlatforms((prev) => {
@@ -139,8 +142,10 @@ export default function Home() {
         product,
         tone,
         platforms: selectedPlatforms,
+        enableWebResearch,
       });
       setPosts(result.posts);
+      setWebResearch(result.webResearch);
     } catch (err) {
       if (err instanceof ApiException) {
         if (err.details && err.details.length > 0) {
@@ -337,6 +342,33 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Web Research Toggle */}
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-100">
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🔍</span>
+                  <span className="font-medium text-gray-800">Web Research</span>
+                  <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full">Beta</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">
+                  Search the web for trending topics and hashtags to make your posts more relevant
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEnableWebResearch(!enableWebResearch)}
+                className={`relative w-12 h-6 rounded-full transition-colors ${
+                  enableWebResearch ? "bg-purple-600" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                    enableWebResearch ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+
             {/* Error Display */}
             {error && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -374,10 +406,13 @@ export default function Home() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  Generating...
+                  {enableWebResearch ? "Researching & Generating..." : "Generating..."}
                 </>
               ) : (
-                "Generate Posts"
+                <>
+                  {enableWebResearch && <span>🔍</span>}
+                  Generate Posts
+                </>
               )}
             </button>
           </div>
@@ -415,6 +450,42 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Web Research Results */}
+            {webResearch && (webResearch.trendingTopics.length > 0 || webResearch.relevantHashtags.length > 0) && (
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">🔍</span>
+                  <span className="font-medium text-purple-800">Web Research Insights</span>
+                </div>
+
+                {webResearch.trendingTopics.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs font-medium text-gray-600 mb-1">Trending Topics</p>
+                    <div className="flex flex-wrap gap-1">
+                      {webResearch.trendingTopics.slice(0, 5).map((topic, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-white rounded-full text-purple-700 border border-purple-200">
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {webResearch.relevantHashtags.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-600 mb-1">Suggested Hashtags</p>
+                    <div className="flex flex-wrap gap-1">
+                      {webResearch.relevantHashtags.slice(0, 8).map((tag, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-blue-100 rounded-full text-blue-700">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

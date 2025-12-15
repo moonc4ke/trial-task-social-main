@@ -4,7 +4,8 @@ dotenv.config();
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { generateSocialMediaPosts } from "./generate";
-import { Product, GenerateRequest, Tone } from "./types";
+import { Product, GenerateRequest, Tone, WebResearchResult } from "./types";
+import { performWebResearch } from "./webResearch";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -74,7 +75,7 @@ app.get("/api/health", (req: Request, res: Response) => {
 // Generate social media posts
 app.post("/api/generate", async (req: Request, res: Response) => {
   try {
-    const { product, tone, platforms }: GenerateRequest = req.body;
+    const { product, tone, platforms, enableWebResearch }: GenerateRequest = req.body;
 
     // Validate product
     const validation = validateProduct(product);
@@ -103,7 +104,28 @@ app.post("/api/generate", async (req: Request, res: Response) => {
       return;
     }
 
-    const posts = await generateSocialMediaPosts(product as Product, selectedTone, selectedPlatforms);
+    // Perform web research if enabled
+    let webResearch: WebResearchResult | undefined;
+    if (enableWebResearch) {
+      console.log("Performing web research for:", product.name);
+      try {
+        webResearch = await performWebResearch(product.name, product.category);
+        console.log("Web research completed:", {
+          topics: webResearch.trendingTopics.length,
+          hashtags: webResearch.relevantHashtags.length,
+        });
+      } catch (researchError) {
+        console.warn("Web research failed, continuing without it:", researchError);
+        // Continue without web research - it's optional
+      }
+    }
+
+    const posts = await generateSocialMediaPosts(
+      product as Product,
+      selectedTone,
+      selectedPlatforms,
+      webResearch
+    );
 
     res.json({
       posts,
@@ -111,6 +133,8 @@ app.post("/api/generate", async (req: Request, res: Response) => {
       count: posts.length,
       tone: selectedTone,
       platforms: selectedPlatforms,
+      webResearchUsed: !!webResearch,
+      webResearch: webResearch || null,
     });
   } catch (error) {
     console.error("Error generating posts:", error);

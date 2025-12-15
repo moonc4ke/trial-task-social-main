@@ -13,10 +13,18 @@ export interface SocialMediaPost {
   content: string;
 }
 
+export interface WebResearchResult {
+  trendingTopics: string[];
+  relevantHashtags: string[];
+  marketInsights: string;
+  competitorMentions: string[];
+}
+
 export interface GeneratePostsRequest {
   product: Product;
   tone?: Tone;
   platforms?: Platform[];
+  enableWebResearch?: boolean;
 }
 
 export interface GeneratePostsResponse {
@@ -25,6 +33,8 @@ export interface GeneratePostsResponse {
   count: number;
   tone: Tone;
   platforms: Platform[];
+  webResearchUsed: boolean;
+  webResearch: WebResearchResult | null;
 }
 
 export interface ApiError {

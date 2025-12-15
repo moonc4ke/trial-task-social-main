@@ -1,5 +1,5 @@
 import { callOpenAI } from "./openai";
-import { Product, SocialMediaPost, Platform, Tone } from "./types";
+import { Product, SocialMediaPost, Platform, Tone, WebResearchResult } from "./types";
 import { config } from "./config";
 
 const TONE_DESCRIPTIONS: Record<Tone, string> = {
@@ -19,9 +19,10 @@ const PLATFORM_GUIDELINES: Record<Platform, string> = {
 export async function generateSocialMediaPosts(
   product: Product,
   tone: Tone = "professional",
-  platforms: Platform[] = ["twitter", "instagram", "linkedin"]
+  platforms: Platform[] = ["twitter", "instagram", "linkedin"],
+  webResearch?: WebResearchResult
 ): Promise<SocialMediaPost[]> {
-  const prompt = buildPrompt(product, tone, platforms);
+  const prompt = buildPrompt(product, tone, platforms, webResearch);
 
   const posts = await callOpenAI(prompt);
 
@@ -42,10 +43,39 @@ export async function generateSocialMediaPosts(
   return validPosts;
 }
 
-function buildPrompt(product: Product, tone: Tone, platforms: Platform[]): string {
+function buildPrompt(
+  product: Product,
+  tone: Tone,
+  platforms: Platform[],
+  webResearch?: WebResearchResult
+): string {
   const platformInstructions = platforms
     .map((p) => `- ${PLATFORM_GUIDELINES[p]}`)
     .join("\n");
+
+  let webResearchSection = "";
+  if (webResearch && (webResearch.trendingTopics.length > 0 || webResearch.relevantHashtags.length > 0)) {
+    const parts: string[] = [];
+
+    if (webResearch.trendingTopics.length > 0) {
+      parts.push(`Current trending topics: ${webResearch.trendingTopics.join(", ")}`);
+    }
+
+    if (webResearch.relevantHashtags.length > 0) {
+      parts.push(`Trending hashtags to consider: ${webResearch.relevantHashtags.join(" ")}`);
+    }
+
+    if (webResearch.marketInsights) {
+      // Truncate market insights to keep prompt reasonable
+      const insights = webResearch.marketInsights.slice(0, 300);
+      parts.push(`Market insights: ${insights}`);
+    }
+
+    webResearchSection = `
+
+WEB RESEARCH INSIGHTS (use these to make posts more relevant and timely):
+${parts.join("\n")}`;
+  }
 
   return `You are a social media marketing expert. Generate engaging social media posts for the following product.
 
@@ -60,6 +90,7 @@ ${TONE_DESCRIPTIONS[tone]}
 
 PLATFORM REQUIREMENTS:
 ${platformInstructions}
+${webResearchSection}
 
 GUIDELINES:
 1. Each post should be unique and tailored to its platform's audience and format
@@ -68,6 +99,7 @@ GUIDELINES:
 4. Highlight the key benefits of the product
 5. Include a subtle call-to-action
 6. Ensure all posts stay within character limits
+${webResearch ? "7. Incorporate relevant trending topics or hashtags from the web research when appropriate" : ""}
 
 Generate exactly one post for each platform: ${platforms.join(", ")}.
 

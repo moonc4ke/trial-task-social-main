@@ -18,6 +18,12 @@ All notable changes to this project will be documented in this file.
 - **Character Counter**: Real-time character count with platform-specific limits
 - **Visual Post Cards**: Platform-branded cards with proper styling
 - **Health Check Endpoint**: `/api/health` for monitoring
+- **Web Research (Beta)**: Optional feature using OpenAI Responses API with web_search
+  - Searches for trending topics related to the product
+  - Finds relevant hashtags being used
+  - Gathers market insights
+  - Results displayed in dedicated section
+  - Toggle to enable/disable research
 
 ### Changed
 - Redesigned UI with two-column layout (input/output)
@@ -60,3 +66,12 @@ All notable changes to this project will be documented in this file.
 - Added platform toggle UI
 - Added copy to clipboard functionality
 - Redesigned UI with cards and better visual hierarchy
+
+### Implementation Phase 3: Web Research Feature
+- Created webResearch.ts service using OpenAI Responses API
+- Implemented web_search tool integration
+- Added result parsing for trending topics and hashtags
+- Integrated research results into post generation prompt
+- Added frontend toggle for web research
+- Created results display section
+- Added beta badge to indicate experimental feature

@@ -18,6 +18,14 @@ export interface GenerateRequest {
   product: Product;
   tone?: Tone;
   platforms?: Platform[];
+  enableWebResearch?: boolean;
+}
+
+export interface WebResearchResult {
+  trendingTopics: string[];
+  relevantHashtags: string[];
+  marketInsights: string;
+  competitorMentions: string[];
 }
 
 export interface GenerateResponse {
